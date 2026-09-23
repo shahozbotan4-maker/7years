@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رحلة 7 سنوات | ذكرى زواجنا</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tone.js for Ambient Audio Synthesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <!-- استدعاء ملف الكونفيج الخارجي -->
+    <script src="config.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            ivory: '#FDFBF7',
+                            darkbg: '#120F0D',
+                            carddark: '#1C1815',
+                            warmbrown: '#5C3D2E',
+                            accentbrown: '#8C5A3C',
+                            softgold: '#D4AF37',
+                            dustyrose: '#D8A7B1',
+                            roseaccent: '#B86B77',
+                        }
+                    },
+                    fontFamily: {
+                        amiri: ['Amiri', 'serif'],
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+       body {
+        font-family: 'Tajawal', sans-serif;
+        transition: background-color 0.5s ease, color 0.5s ease;
+        overflow-x: hidden;
+
+        /* DSC_7298.JPG */
+        background-image: linear-gradient(rgba(18, 15, 13, 0.75), rgba(18, 15, 13, 0.75)), url('DSC_7298.JPG');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+        .glowing-orb {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, rgba(216, 167, 177, 0.1) 50%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: floatOrb 8s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(-20%, -20%) scale(1); }
+            100% { transform: translate(30%, 20%) scale(1.3); }
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner, .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #120F0D; }
+        ::-webkit-scrollbar-thumb { background: #5C3D2E; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+
+        .polaroid {
+            background: #fff;
+            padding: 12px 12px 24px 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark .polaroid { background: #231E1A; color: #FDFBF7; }
+        .polaroid:hover {
+            transform: translateY(-6px) rotate(1deg);
+            box-shadow: 0 20px 30px -10px rgba(212, 175, 55, 0.2);
+        }
+
+        .typewriter-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+
+<body class="bg-brand-darkbg text-brand-ivory min-h-screen selection:bg-brand-softgold selection:text-black">
+
+    <!-- Control Bar -->
+    <div class="fixed top-4 left-4 right-4 z-50 flex justify-between items-center max-w-5xl mx-auto px-4 py-2 rounded-full bg-brand-carddark/80 backdrop-blur-md border border-brand-warmbrown/30 shadow-lg">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <button id="musicToggleBtn" onclick="toggleAudio()" class="flex items-center space-x-2 space-x-reverse text-xs md:text-sm px-4 py-2 rounded-full bg-brand-warmbrown/40 hover:bg-brand-softgold hover:text-black transition-all border border-brand-softgold/30">
+                <i id="musicIcon" class="fas fa-music text-brand-softgold"></i>
+                <span id="musicBtnText">شغّلي صوت الحكاية</span>
+            </button>
+        </div>
+
+        <div class="flex items-center space-x-2 space-x-reverse">
+            <span class="text-xs font-amiri text-brand-softgold hidden sm:inline">ذكرى لقائنا السابع ✨</span>
+            <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-brand-warmbrown/30 hover:bg-brand-warmbrown/60 text-brand-softgold transition-all" title="تبديل المظهر">
+                <i id="themeIcon" class="fas fa-sun"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="relative overflow-hidden">
+
+        <!-- 1. Hero Section -->
+        <section id="hero-section" class="relative min-h-screen flex flex-col justify-center items-center text-center p-6">
+            <div class="glowing-orb top-1/3 left-1/2 -translate-x-1/2"></div>
+            
+            <div class="max-w-2xl mx-auto z-10 space-y-8 animate-fade-in">
+                <div id="hero-badge" class="inline-block px-4 py-1.5 rounded-full border border-brand-softgold/40 bg-brand-warmbrown/20 text-brand-softgold text-sm tracking-widest font-amiri"></div>
+
+                <h1 id="hero-title" class="font-amiri text-3xl md:text-5xl lg:text-6xl font-bold leading-relaxed text-brand-ivory"></h1>
+
+                <p id="hero-subtitle" class="text-gray-300 font-tajawal text-base md:text-lg max-w-lg mx-auto opacity-90 leading-relaxed"></p>
+
+                <div class="pt-6">
+                    <button onclick="startJourney()" class="group relative inline-flex items-center gap-3 px-8 py-4 text-lg font-bold text-black bg-gradient-to-r from-brand-softgold to-brand-dustyrose rounded-full shadow-xl hover:shadow-brand-softgold/30 hover:scale-105 transition-all duration-300">
+                        <span id="hero-button-text"></span>
+                        <i class="fas fa-heart text-brand-roseaccent group-hover:animate-ping"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Counter Section -->
+        <section id="counter-section" class="py-20 px-4 bg-brand-carddark/50 border-y border-brand-warmbrown/20">
+            <div class="max-w-4xl mx-auto text-center space-y-12">
+                <h2 id="counter-title" class="font-amiri text-2xl md:text-3xl text-brand-softgold"></h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="p-6 rounded-2xl bg-brand-carddark border border-brand-warmbrown/30 shadow-md transform hover:-translate-y-1 transition">
+                        <span id="counter-years" class="block font-amiri text-4xl md:text-5xl font-bold text-brand-softgold">0</span>
+                        <span id="counter-years-label" class="text-sm md:text-base text-gray-400 font-tajawal mt-2 block"></span>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-brand-carddark border border-brand-warmbrown/30 shadow-md transform hover:-translate-y-1 transition">
+                        <span id="counter-months" class="block font-amiri text-4xl md:text-5xl font-bold text-brand-dustyrose">0</span>
+                        <span id="counter-months-label" class="text-sm md:text-base text-gray-400 font-tajawal mt-2 block"></span>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-brand-carddark border border-brand-warmbrown/30 shadow-md transform hover:-translate-y-1 transition">
+                        <span id="counter-days" class="block font-amiri text-4xl md:text-5xl font-bold text-brand-softgold">0</span>
+                        <span id="counter-days-label" class="text-sm md:text-base text-gray-400 font-tajawal mt-2 block"></span>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-brand-carddark border border-brand-warmbrown/30 shadow-md transform hover:-translate-y-1 transition">
+                        <span id="counter-hours" class="block font-amiri text-4xl md:text-5xl font-bold text-brand-dustyrose">0</span>
+                        <span id="counter-hours-label" class="text-sm md:text-base text-gray-400 font-tajawal mt-2 block"></span>
+                    </div>
+                </div>
+
+                <p id="counter-quote" class="font-amiri text-xl md:text-2xl text-brand-ivory italic max-w-2xl mx-auto leading-relaxed"></p>
+            </div>
+        </section>
+
+        <!-- 3. Timeline Section -->
+        <section id="timeline-section" class="py-24 px-4 max-w-4xl mx-auto">
+            <div class="text-center mb-16 space-y-3">
+                <span id="timeline-subtitle" class="text-brand-softgold text-sm font-amiri"></span>
+                <h2 id="timeline-title" class="font-amiri text-3xl md:text-4xl text-brand-ivory font-bold"></h2>
+                <p id="timeline-help" class="text-gray-400 text-sm md:text-base"></p>
+            </div>
+
+            <div id="timeline-cards-container" class="space-y-8 relative before:absolute before:inset-0 before:left-1/2 before:-translate-x-1/2 before:w-0.5 before:bg-brand-warmbrown/30"></div>
+        </section>
+
+        <!-- 4. Kids Section -->
+        <section id="kids-section" class="py-20 px-4 bg-gradient-to-b from-brand-carddark/30 to-brand-darkbg border-t border-brand-warmbrown/20">
+            <div class="max-w-4xl mx-auto text-center space-y-12">
+                <div class="space-y-4">
+                    <span id="kids-badge" class="px-4 py-1 rounded-full bg-brand-dustyrose/20 text-brand-dustyrose text-xs font-bold uppercase tracking-wider"></span>
+                    <h2 id="kids-title" class="font-amiri text-3xl md:text-4xl font-bold text-brand-softgold"></h2>
+                    <p id="kids-subtitle" class="text-gray-300 font-tajawal max-w-xl mx-auto text-sm md:text-base"></p>
+                </div>
+
+                <div id="kids-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6"></div>
+            </div>
+        </section>
+
+        <!-- 5. Quiz Section -->
+        <section id="quiz-section" class="py-20 px-4 max-w-3xl mx-auto">
+            <div class="bg-brand-carddark p-8 md:p-12 rounded-3xl border border-brand-warmbrown/30 shadow-2xl space-y-8">
+                <div class="text-center space-y-2">
+                    <span id="quiz-badge" class="text-brand-softgold text-xs font-bold uppercase tracking-wider"></span>
+                    <h2 id="quiz-title" class="font-amiri text-2xl md:text-3xl text-brand-ivory font-bold"></h2>
+                    <p id="quiz-subtitle" class="text-gray-400 text-sm"></p>
+                </div>
+
+                <div id="quiz-body" class="space-y-6"></div>
+                <div id="quiz-feedback" class="hidden p-4 rounded-xl bg-brand-warmbrown/30 border border-brand-softgold/30 text-center font-amiri text-brand-softgold text-lg transition-all"></div>
+            </div>
+        </section>
+
+        <!-- 6. Love Reasons Section -->
+        <section id="love-reasons-section" class="py-20 px-4 max-w-5xl mx-auto">
+            <div class="text-center mb-16 space-y-3">
+                <h2 id="reasons-title" class="font-amiri text-3xl md:text-4xl text-brand-softgold font-bold"></h2>
+                <p id="reasons-subtitle" class="text-gray-400 text-sm md:text-base"></p>
+            </div>
+
+            <div id="reasons-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <div class="text-center mt-12">
+                <p id="reasons-footer-quote" class="font-amiri text-xl text-brand-dustyrose italic"></p>
+            </div>
+        </section>
+
+        <!-- 7. Polaroid Gallery -->
+        <section id="memory-box-section" class="py-20 px-4 bg-brand-carddark/30 border-y border-brand-warmbrown/20">
+            <div class="max-w-5xl mx-auto space-y-12">
+                <div class="text-center space-y-3">
+                    <h2 id="polaroids-title" class="font-amiri text-3xl md:text-4xl text-brand-ivory font-bold"></h2>
+                    <p id="polaroids-subtitle" class="text-gray-400 text-sm"></p>
+                </div>
+
+                <div id="polaroid-gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- 8. Finale Section -->
+        <section id="finale-section" class="py-28 px-4 text-center relative overflow-hidden">
+            <div class="glowing-orb bottom-10 right-1/3"></div>
+
+            <div class="max-w-3xl mx-auto space-y-10 z-10 relative">
+                <div class="p-8 md:p-12 rounded-3xl bg-brand-carddark/80 backdrop-blur-md border border-brand-softgold/30 shadow-2xl space-y-6">
+                    <i class="fas fa-quote-right text-3xl text-brand-softgold/50"></i>
+                    
+                    <div id="typewriter-text" class="font-amiri text-2xl md:text-3xl text-brand-ivory leading-relaxed min-h-[140px] flex items-center justify-center"></div>
+
+                    <div class="pt-6">
+                        <button onclick="revealSurpriseModal()" id="finale-btn" class="px-8 py-4 rounded-full bg-gradient-to-r from-brand-softgold via-brand-dustyrose to-brand-roseaccent text-black font-bold text-lg shadow-xl hover:scale-105 transition duration-300"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SURPRISE MODAL -->
+    <div id="surpriseModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
+        <div class="bg-brand-carddark border border-brand-softgold/50 rounded-3xl p-8 max-w-lg w-full text-center space-y-6 relative transform scale-95 transition-all" id="modalCard">
+            <button onclick="closeSurpriseModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="w-16 h-16 bg-brand-softgold/20 rounded-full flex items-center justify-center mx-auto text-brand-softgold text-2xl">
+                <i class="fas fa-gift"></i>
+            </div>
+
+            <h3 id="modal-title" class="font-amiri text-2xl md:text-3xl font-bold text-brand-softgold"></h3>
+            <p id="modal-body" class="text-gray-200 font-tajawal leading-relaxed text-base md:text-lg"></p>
+            <div id="modal-extra" class="p-4 rounded-xl bg-brand-warmbrown/20 border border-brand-warmbrown/40 text-xs md:text-sm text-brand-dustyrose"></div>
+
+            <button onclick="closeSurpriseModal()" id="modal-btn" class="w-full py-3 rounded-xl bg-brand-softgold text-black font-bold hover:bg-yellow-500 transition"></button>
+        </div>
+    </div>
+
+    <!-- SCRIPT FOR DYNAMIC RENDERING -->
+    <script>
+        let currentQuizIndex = 0;
+        let isAudioPlaying = false;
+        let bgAudio = null;
+        let currentAudio = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfigData();
+            initCounters();
+            renderTimeline();
+            renderKidsSection();
+            renderQuiz();
+            renderLoveReasons();
+            renderPolaroids();
+            initTypewriter();
+        });
+
+        function loadConfigData() {
+            document.getElementById('hero-badge').innerText = CONFIG_DATA.hero.badge;
+            document.getElementById('hero-title').innerText = CONFIG_DATA.hero.title;
+            document.getElementById('hero-subtitle').innerText = CONFIG_DATA.hero.subtitle;
+            document.getElementById('hero-button-text').innerText = CONFIG_DATA.hero.buttonText;
+
+            document.getElementById('counter-title').innerText = CONFIG_DATA.counter.title;
+            document.getElementById('counter-years-label').innerText = CONFIG_DATA.counter.yearsLabel;
+            document.getElementById('counter-months-label').innerText = CONFIG_DATA.counter.monthsLabel;
+            document.getElementById('counter-days-label').innerText = CONFIG_DATA.counter.daysLabel;
+            document.getElementById('counter-hours-label').innerText = CONFIG_DATA.counter.hoursLabel;
+            document.getElementById('counter-quote').innerText = CONFIG_DATA.counter.quote;
+
+            document.getElementById('timeline-subtitle').innerText = CONFIG_DATA.timeline.sectionSubtitle;
+            document.getElementById('timeline-title').innerText = CONFIG_DATA.timeline.sectionTitle;
+            document.getElementById('timeline-help').innerText = CONFIG_DATA.timeline.sectionHelp;
+
+            document.getElementById('kids-badge').innerText = CONFIG_DATA.kids.badge;
+            document.getElementById('kids-title').innerText = CONFIG_DATA.kids.title;
+            document.getElementById('kids-subtitle').innerText = CONFIG_DATA.kids.subtitle;
+
+            document.getElementById('quiz-badge').innerText = CONFIG_DATA.quiz.badge;
+            document.getElementById('quiz-title').innerText = CONFIG_DATA.quiz.title;
+            document.getElementById('quiz-subtitle').innerText = CONFIG_DATA.quiz.subtitle;
+
+            document.getElementById('reasons-title').innerText = CONFIG_DATA.loveReasons.title;
+            document.getElementById('reasons-subtitle').innerText = CONFIG_DATA.loveReasons.subtitle;
+            document.getElementById('reasons-footer-quote').innerText = CONFIG_DATA.loveReasons.footerQuote;
+
+            document.getElementById('polaroids-title').innerText = CONFIG_DATA.polaroids.title;
+            document.getElementById('polaroids-subtitle').innerText = CONFIG_DATA.polaroids.subtitle;
+
+            document.getElementById('finale-btn').innerText = CONFIG_DATA.finale.buttonText;
+            document.getElementById('modal-title').innerText = CONFIG_DATA.surpriseModal.title;
+            document.getElementById('modal-body').innerText = CONFIG_DATA.surpriseModal.body;
+            document.getElementById('modal-extra').innerText = CONFIG_DATA.surpriseModal.extra;
+            document.getElementById('modal-btn').innerText = CONFIG_DATA.surpriseModal.buttonText;
+        }
+
+        function initCounters() {
+            const startDate = new Date();
+            startDate.setFullYear(startDate.getFullYear() - 7);
+            const now = new Date();
+            const diffTime = Math.abs(now - startDate);
+            const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            animateValue("counter-years", 0, 7, 1500);
+            animateValue("counter-months", 0, 84, 2000);
+            animateValue("counter-days", 0, totalDays || 2555, 2500);
+            animateValue("counter-hours", 0, (totalDays || 2555) * 24, 2800);
+        }
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString('ar-EG');
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timeline-cards-container');
+            container.innerHTML = CONFIG_DATA.timeline.items.map((item, idx) => `
+                <div class="relative flex items-center justify-between ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''} group">
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-brand-carddark border-2 border-brand-softgold text-brand-softgold group-hover:scale-110 transition duration-300 shadow-lg">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <div class="w-full md:w-5/12 bg-brand-carddark border border-brand-warmbrown/30 rounded-2xl p-6 shadow-xl hover:border-brand-softgold/50 transition duration-300">
+                        <span class="text-xs font-bold font-amiri text-brand-dustyrose block mb-1">${item.year}</span>
+                        <h3 class="font-amiri text-xl font-bold text-brand-softgold mb-2">${item.title}</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-4">${item.description}</p>
+                        <div class="overflow-hidden rounded-xl h-36">
+                            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderKidsSection() {
+            const container = document.getElementById('kids-cards-container');
+            container.innerHTML = CONFIG_DATA.kids.items.map((kid) => `
+                <div class="bg-brand-carddark border border-brand-warmbrown/30 p-8 rounded-3xl text-right space-y-4 shadow-xl hover:border-brand-dustyrose/50 transition">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <div class="w-12 h-12 rounded-full bg-brand-dustyrose/20 text-brand-dustyrose flex items-center justify-center text-xl">
+                            <i class="fas ${kid.icon}"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-amiri text-xl font-bold text-brand-ivory">${kid.name}</h4>
+                            <span class="text-xs text-brand-softgold">${kid.audioNote}</span>
+                        </div>
+                    </div>
+                    <p class="font-amiri text-lg text-gray-200 leading-relaxed italic">${kid.message}</p>
+                    <button onclick="playCuteNote('${kid.audio || ''}')" class="text-xs px-3 py-2 rounded-lg bg-brand-warmbrown/30 text-brand-dustyrose hover:bg-brand-warmbrown/60 transition inline-flex items-center gap-2">
+                        <i class="fas fa-volume-high"></i>
+                        <span>استمعي للرسالة الصوتية</span>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderQuiz() {
+            const quizBody = document.getElementById('quiz-body');
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.add('hidden');
+
+            const item = CONFIG_DATA.quiz.questions[currentQuizIndex];
+            quizBody.innerHTML = `
+                <div class="space-y-4">
+                    <span class="text-xs text-brand-softgold font-amiri">السؤال ${currentQuizIndex + 1} من ${CONFIG_DATA.quiz.questions.length}</span>
+                    <h3 class="font-amiri text-xl md:text-2xl text-brand-ivory font-bold">${item.question}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        ${item.options.map((opt) => `
+                            <button onclick="selectQuizOption('${item.feedback}')" class="p-4 text-right rounded-xl bg-brand-warmbrown/20 border border-brand-warmbrown/40 hover:bg-brand-softgold hover:text-black transition text-sm font-tajawal">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectQuizOption(feedbackText) {
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.innerText = feedbackText;
+            feedback.classList.remove('hidden');
+
+            setTimeout(() => {
+                currentQuizIndex = (currentQuizIndex + 1) % CONFIG_DATA.quiz.questions.length;
+                renderQuiz();
+            }, 3500);
+        }
+
+        function renderLoveReasons() {
+            const container = document.getElementById('reasons-grid');
+            container.innerHTML = CONFIG_DATA.loveReasons.items.map((reason, idx) => `
+                <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-brand-carddark border border-brand-warmbrown/30 flex flex-col justify-center items-center p-6 shadow-md">
+                            <span class="w-10 h-10 rounded-full bg-brand-softgold/10 text-brand-softgold flex items-center justify-center font-amiri font-bold text-lg mb-2">${idx + 1}</span>
+                            <span class="text-sm font-amiri text-brand-dustyrose">المسي البطاقة 💖</span>
+                        </div>
+                        <div class="flip-card-back bg-gradient-to-br from-brand-warmbrown to-brand-carddark border border-brand-softgold/40 flex items-center justify-center p-6 shadow-xl">
+                            <p class="font-amiri text-base md:text-lg text-brand-ivory leading-relaxed">${reason}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPolaroids() {
+            const container = document.getElementById('polaroid-gallery');
+            container.innerHTML = CONFIG_DATA.polaroids.items.map((item) => `
+                <div class="polaroid rounded-lg">
+                    <div class="h-52 overflow-hidden mb-4 rounded">
+                        <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <div class="text-center font-amiri space-y-1">
+                        <h4 class="font-bold text-lg text-gray-800 dark:text-brand-ivory">${item.title}</h4>
+                        <span class="text-xs text-brand-roseaccent block">${item.date}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 font-tajawal pt-1">${item.caption}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function initTypewriter() {
+            const textContainer = document.getElementById('typewriter-text');
+            let lineIdx = 0;
+            let charIdx = 0;
+            const lines = CONFIG_DATA.finale.typewriterLines;
+
+            function typeNext() {
+                if (lineIdx < lines.length) {
+                    const currentLine = lines[lineIdx];
+                    if (charIdx < currentLine.length) {
+                        textContainer.innerHTML = lines.slice(0, lineIdx).join('<br>') + 
+                            (lineIdx > 0 ? '<br>' : '') + 
+                            currentLine.substring(0, charIdx + 1) + 
+                            '<span class="typewriter-cursor"></span>';
+                        charIdx++;
+                        setTimeout(typeNext, 60);
+                    } else {
+                        lineIdx++;
+                        charIdx = 0;
+                        setTimeout(typeNext, 800);
+                    }
+                }
+            }
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        typeNext();
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(document.getElementById('finale-section'));
+        }
+
+        function startJourney() {
+            document.getElementById('counter-section').scrollIntoView({ behavior: 'smooth' });
+            if (!isAudioPlaying) toggleAudio();
+        }
+
+        function revealSurpriseModal() {
+            const modal = document.getElementById('surpriseModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.firstElementChild.classList.remove('scale-95');
+                modal.firstElementChild.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSurpriseModal() {
+            const modal = document.getElementById('surpriseModal');
+            modal.firstElementChild.classList.remove('scale-100');
+            modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                html.classList.add('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
+
+        async function toggleAudio() {
+            const btnText = document.getElementById('musicBtnText');
+            const icon = document.getElementById('musicIcon');
+
+            if (!isAudioPlaying) {
+                const bgMusicFile = CONFIG_DATA.backgroundMusic && CONFIG_DATA.backgroundMusic.audio;
+                
+                if (bgMusicFile) {
+                    if (!bgAudio) {
+                        bgAudio = new Audio(bgMusicFile);
+                        bgAudio.loop = true;
+                    }
+                    bgAudio.play().then(() => {
+                        isAudioPlaying = true;
+                        btnText.innerText = "صوت الحكاية يعمل ✨";
+                        icon.classList.add('animate-spin');
+                    }).catch(e => console.log("Audio background play error:", e));
+                }
+            } else {
+                if (bgAudio) {
+                    bgAudio.pause();
+                }
+                isAudioPlaying = false;
+                btnText.innerText = "شغّلي صوت الحكاية";
+                icon.classList.remove('animate-spin');
+            }
+        }
+
+        function playCuteNote(audioSrc) {
+            if (audioSrc) {
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                }
+                currentAudio = new Audio(audioSrc);
+                currentAudio.play().catch(e => console.log("Audio play error:", e));
+            }
+        }
+    </script>
+</body>
+</html>
